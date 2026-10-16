@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<title>คู่มือการสอน: CYD ELM327 WEB DTC V3.2.0 (อธิบายทุกบรรทัด)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+  body {
+    font-family: 'Sarabun', 'TH SarabunPSK', Tahoma, sans-serif;
+    line-height: 1.6;
+    color: #1e293b;
+    background: #cbd5e1;
+    margin: 0;
+    padding: 20px;
+  }
+  .action-bar {
+    max-width: 1050px;
+    margin: 0 auto 20px auto;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 16px 24px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-word { background: #2563eb; }
+  .btn-word:hover { background: #1d4ed8; }
+  .btn-pdf { background: #059669; }
+  .btn-pdf:hover { background: #047857; }
+  .page {
+    max-width: 1050px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 45px 55px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  h1 {
+    font-size: 24pt;
+    color: #0f172a;
+    border-bottom: 3px solid #0284c7;
+    padding-bottom: 8px;
+    margin-top: 0;
+  }
+  h2 {
+    font-size: 16pt;
+    color: #ffffff;
+    background-color: #0284c7;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin-top: 32px;
+  }
+  h3 {
+    font-size: 13.5pt;
+    color: #0369a1;
+    border-left: 4px solid #0284c7;
+    padding-left: 10px;
+    margin-top: 22px;
+  }
+  p, li { font-size: 11.5pt; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 24px 0;
+    font-size: 10.5pt;
+  }
+  th, td {
+    border: 1px solid #94a3b8;
+    padding: 8px 10px;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background-color: #e2e8f0;
+    color: #0f172a;
+    font-weight: 700;
+  }
+  td.line-num {
+    width: 6%;
+    text-align: center;
+    background-color: #f1f5f9;
+    color: #64748b;
+    font-family: Consolas, monospace;
+    font-weight: bold;
+  }
+  td.code-col {
+    width: 42%;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 9.5pt;
+    background-color: #f8fafc;
+    color: #0f172a;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  td.desc-col { width: 52%; }
+  .diagram-container {
+    border: 2px solid #94a3b8;
+    background-color: #f8fafc;
+    padding: 16px;
+    margin: 18px 0;
+    text-align: center;
+    border-radius: 6px;
+  }
+  .arch-table td {
+    text-align: center;
+    padding: 12px;
+    border: 2px solid #0284c7;
+    background-color: #eff6ff;
+  }
+  .highlight {
+    background-color: #fef3c7;
+    border-left: 4px solid #d97706;
+    padding: 12px 16px;
+    margin: 16px 0;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .action-bar { display: none !important; }
+    .page { box-shadow: none; padding: 0; max-width: 100%; }
+    h2 { page-break-before: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    h2:first-of-type { page-break-before: avoid; }
+    th, td.line-num, td.code-col, .arch-table td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="action-bar">
+  <div>
+    <strong>เอกสารประกอบการสอน: CYD ELM327 WEB DTC V3.2.0</strong><br>
+    <small style="color:#cbd5e1;">คลิกปุ่มด้านขวาเพื่อดาวน์โหลดเป็นไฟล์ Word (.doc) หรือบันทึกเป็น PDF (.pdf)</small>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-word" onclick="exportToWord()">📥 ดาวน์โหลดเป็นไฟล์ Word (.doc)</button>
+    <button class="btn btn-pdf" onclick="window.print()">🖨️ บันทึกเป็นไฟล์ PDF (.pdf)</button>
+  </div>
+</div>
+
+<div class="page" id="document-content">
+  <h1>คู่มือการสอน: ระบบจำลองกล่อง ECU รถยนต์ OBD-II (ELM327 V3.2.0) บนบอร์ด ESP32-CYD</h1>
+  <p><strong>ชุดโค้ดต้นฉบับ:</strong> <code>CYD_ELM327_WEB_DTC_V3_2_0_TH_EN</code> (รุ่นวันที่ 14/10/2026)[cite: 2]<br>
+  <strong>บอร์ดไมโครคอนโทรลเลอร์:</strong> ESP32-2432S028R (Cheap Yellow Display) จอ TFT ST7789 2.8" (320×240) + ทัชสกรีน XPT2046[cite: 2]<br>
+  <strong>เนื้อหาในเอกสาร:</strong> แผนภาพโครงสร้างฮาร์ดแวร์/ซอฟต์แวร์ และคำอธิบายโค้ดละเอียดทุกบรรทัดสำหรับใช้ประกอบการสอน</p>
+
+  <!-- แผนภาพที่ 1 (ใช้ตารางเพื่อให้เปิดใน MS Word แล้วเส้นไม่เพี้ยน) -->
+  <h3>แผนภาพที่ 1: สถาปัตยกรรมการทำงานแบบ Dual-Core FreeRTOS บน ESP32</h3>
+  <table class="arch-table">
+    <tr>
+      <td colspan="3" style="background-color:#0f172a; color:#ffffff; font-weight:bold; font-size:12pt;">
+        ESP32 Dual-Core SoC (240 MHz / Flash 4MB / Huge APP 3MB)[cite: 2]
+      </td>
+    </tr>
+    <tr>
+      <td style="width:33%; background-color:#dbeafe;">
+        <strong>PRO_CPU (Core 0)</strong><br>
+        <strong>Task: <code>btTask ("elm-bt")</code></strong><br>
+        Priority = 2, Stack = 8192 bytes[cite: 2]<hr>
+        • ดูแล Bluetooth Classic SPP[cite: 2]<br>
+        • รับคำสั่ง AT / OBD2 จากแอปมือถือ[cite: 2]<br>
+        • ประมวลผล <code>ElmSimulator::reply()</code>[cite: 2]<br>
+        • ส่งเฟรม ISO-TP (Single/Multi-frame)[cite: 2]
+      </td>
+      <td style="width:34%; background-color:#fef3c7; border-color:#d97706;">
+        <strong>ตัวประสานข้อมูลกลาง (Thread-Safety)</strong><br>
+        <strong><code>sharedMutex</code> (Guard RAII Struct)</strong>[cite: 2]<hr>
+        ปกป้องข้อมูลที่ใช้ร่วมกันไม่ให้ชนกัน[cite: 2]:<br>
+        1. <code>vehicle</code> (RPM, Speed, AFR, Coolant)[cite: 2]<br>
+        2. <code>faults</code> (Stored, Pending, Freeze Frame)[cite: 2]<br>
+        3. <code>uiSettings</code> (ภาษา, ธีม, สี, ความสว่าง)[cite: 2]<br>
+        4. <code>netState</code> &amp; <code>linkInfo</code> (IP, สถานะ)[cite: 2]
+      </td>
+      <td style="width:33%; background-color:#dcfce7; border-color:#16a34a;">
+        <strong>APP_CPU (Core 1)</strong><br>
+        <strong>1. <code>loop()</code> + 2. <code>webTask ("elm-web")</code></strong><br>
+        Priority = 1, Stack = 6144 bytes[cite: 2]<hr>
+        • อ่านทัชสกรีน XPT2046 ทุก 15 ms[cite: 2]<br>
+        • วาดจอ TFT + Sprite ทุก 60 ms[cite: 2]<br>
+        • ขับเสียง Beep (GPIO26, LEDC Ch 2)[cite: 2]<br>
+        • รัน WebServer พอร์ต 80 &amp; ตั้งค่า Wi-Fi[cite: 2]
+      </td>
+    </tr>
+  </table>
+
+  <h3>แผนภาพที่ 2: ตารางการต่อขาพินภายในบอร์ด ESP32-CYD (Pin Mapping)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ส่วนประกอบฮาร์ดแวร์</th>
+        <th>บัส / ช่องสัญญาณ</th>
+        <th>ขาพิน ESP32 (GPIO)</th>
+        <th>หน้าที่การทำงานในโค้ด</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>จอภาพ TFT ST7789</strong>[cite: 2]</td>
+        <td><code>HSPI_HOST</code> (40 MHz, DMA Ch 1)[cite: 2]</td>
+        <td>SCLK=14, MOSI=13, MISO=12, CS=15, DC=2[cite: 2]</td>
+        <td>ส่งข้อมูลพิกเซลแสดงผลหน้าจอ 6 หน้าด้วยความเร็วสูง[cite: 2]</td>
+      </tr>
+      <tr>
+        <td><strong>ไฟหน้าจอ Backlight</strong>[cite: 2]</td>
+        <td><code>LEDC Channel 7</code> (Timer 3, 12 kHz)[cite: 2]</td>
+        <td>GPIO 21[cite: 2]</td>
+        <td>ควบคุมความสว่างหน้าจอ (ค่า 30 ถึง 255)[cite: 2]</td>
+      </tr>
+      <tr>
+        <td><strong>ทัชสกรีน XPT2046</strong>[cite: 2]</td>
+        <td><code>VSPI_HOST</code> (1 MHz)[cite: 2]</td>
+        <td>CLK=25, MOSI=32, MISO=39, CS=33, IRQ=36[cite: 2]</td>
+        <td>อ่านพิกัดการแตะหน้าจอและลากแถบเลื่อน (แยกบัสกับจอภาพ)[cite: 2]</td>
+      </tr>
+      <tr>
+        <td><strong>วงจรขยายเสียง (Buzzer/Amp)</strong>[cite: 2]</td>
+        <td><code>LEDC Channel 2</code> (Timer 1, 2200 Hz)[cite: 2]</td>
+        <td>GPIO 26 (ต่อขั้วลำโพง SPK)[cite: 2]</td>
+        <td>สร้างเสียงติ๊ดสั้นๆ 35 ms เมื่อกดปุ่ม (แยก Timer กับไฟจอ)[cite: 2]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- บทที่ 1 -->
+  <h2>บทที่ 1: ไฟล์ตั้งค่าระบบและไดรเวอร์หน้าจอ (config.h &amp; board_28_st7789.h)</h2>
+
+  <h3>1.1 คำอธิบายไฟล์ config.h (ทุกบรรทัด)</h3>
+  <table>
+    <thead>
+      <tr><th>บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">1</td><td class="code-col">#pragma once</td><td class="desc-col">สั่งคอมไพเลอร์ให้นำเข้าไฟล์ Header นี้เพียงครั้งเดียว ป้องกันปัญหาการประกาศซ้ำ</td></tr>
+      <tr><td class="line-num">2-3</td><td class="code-col">#define APP_VERSION "3.2.0"
+#define CREATED_ICT "14/10/2026 17:37 ICT"</td><td class="desc-col">กำหนดข้อความเลขเวอร์ชัน 3.2.0 และวันเวลาที่สร้าง เพื่อนำไปแสดงบนหน้าจอ TFT และ Serial Monitor[cite: 2]</td></tr>
+      <tr><td class="line-num">4-5</td><td class="code-col">#define SCREEN_ROTATION 1
+#define TFT_BRIGHTNESS 230</td><td class="desc-col">กำหนดแนวการวางจอเป็นแนวนอน (1 = 320×240 พิกเซล) และความสว่างเริ่มต้นที่ 230[cite: 2]</td></tr>
+      <tr><td class="line-num">6-9</td><td class="code-col">#ifndef CYD_PANEL_ILI9341
+#define CYD_PANEL_ILI9341 0
+#endif</td><td class="desc-col">กำหนดตัวเลือกพาเนลจอ: ค่า <code>0</code> คือจอชิป <strong>ST7789</strong> (รุ่นใหม่) หากใช้บอร์ดรุ่นชิป ILI9341 ให้แก้เป็น <code>1</code>[cite: 2]</td></tr>
+      <tr><td class="line-num">10-11</td><td class="code-col">#define TFT_INVERT 0
+#define TFT_RGB_ORDER 0</td><td class="desc-col">ปิดการกลับสีพิกเซล (Invert) และใช้ลำดับสี RGB มาตรฐาน[cite: 2]</td></tr>
+      <tr><td class="line-num">12-13</td><td class="code-col">static const char *BT_DEVICE_NAME = "VUTH_CYD_OBD_SIM";
+static const char *BT_PIN = "1234";</td><td class="desc-col">ชื่อ Bluetooth ที่แสดงบนโทรศัพท์มือถือ และรหัส PIN 4 หลักสำหรับจับคู่เชื่อมต่อ[cite: 2]</td></tr>
+      <tr><td class="line-num">14-17</td><td class="code-col">static const char *AP_NAME = "VUTH-OBD-SIM";
+static const char *AP_PASSWORD = "vuthobd32";
+static const char *WIFI_SSID = "";
+static const char *WIFI_PASSWORD = "";</td><td class="desc-col">ชื่อและรหัสผ่าน Wi-Fi เมื่อบอร์ดทำหน้าที่เป็น Access Point (IP: 192.168.4.1) ส่วนค่า Wi-Fi บ้านปล่อยว่างไว้เพื่อให้ผู้ใช้เลือกผ่านหน้าจอหรือหน้าเว็บ[cite: 2]</td></tr>
+      <tr><td class="line-num">18-19</td><td class="code-col">#define DEFAULT_TRACE false</td><td class="desc-col">ปิดการแสดง Log คำสั่ง OBD ทุกบรรทัดทาง Serial เป็นค่าเริ่มต้น เพื่อไม่ให้ Serial UART ไปหน่วงความเร็ว Bluetooth[cite: 2]</td></tr>
+      <tr><td class="line-num">21-25</td><td class="code-col">#define BEEP_PIN 26
+#define BEEP_LEDC_CHANNEL 2
+#define BEEP_FREQUENCY 2200
+#define BEEP_DURATION_MS 35</td><td class="desc-col">กำหนดขา GPIO 26 ขับเสียงความถี่ 2,200 Hz นาน 35 ms ผ่านช่อง PWM ที่ 2 (ไม่กวนไฟจอที่ใช้ช่อง 7)[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 คำอธิบายไฟล์ board_28_st7789.h (ทุกบล็อกคำสั่ง)</h3>
+  <table>
+    <thead>
+      <tr><th>บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">1-7</td><td class="code-col">#pragma once
+#define LGFX_USE_V1
+#include &lt;LovyanGFX.hpp&gt;
+#ifndef SCREEN_ROTATION
+#define SCREEN_ROTATION 1
+#endif</td><td class="desc-col">เรียกใช้งานไลบรารีกราฟิก <code>LovyanGFX</code> เวอร์ชัน 1 ซึ่งมีความเร็วในการวาดเฟรมและจัดการ Sprite สูงกว่าไลบรารีทั่วไป[cite: 2]</td></tr>
+      <tr><td class="line-num">9-19</td><td class="code-col">class CYD28Display : public lgfx::LGFX_Device {
+ private:
+  #if CYD_PANEL_ILI9341
+  lgfx::Panel_ILI9341 panel_;
+  #else
+  lgfx::Panel_ST7789 panel_;
+  #endif
+  lgfx::Bus_SPI bus_;
+  lgfx::Light_PWM light_;
+  lgfx::Touch_XPT2046 touch_;</td><td class="desc-col">สร้างคลาส <code>CYD28Display</code> โดยรวมออบเจกต์ย่อย 4 ส่วนไว้ด้วยกัน คือ พาเนลจอ, บัส SPI, ไฟพื้นหลัง PWM และตัวอ่านทัชสกรีน[cite: 2]</td></tr>
+      <tr><td class="line-num">22-37</td><td class="code-col">auto cfg = bus_.config();
+cfg.spi_host = HSPI_HOST;
+cfg.spi_mode = 0;
+cfg.freq_write = 40000000;
+cfg.freq_read = 16000000;
+cfg.spi_3wire = false;
+cfg.use_lock = true;
+cfg.dma_channel = 1;
+cfg.pin_sclk = 14; cfg.pin_mosi = 13;
+cfg.pin_miso = 12; cfg.pin_dc = 2;
+bus_.config(cfg); panel_.setBus(&amp;bus_);</td><td class="desc-col"><strong>บล็อกตั้งค่า SPI จอภาพ:</strong><br>ใช้ฮาร์ดแวร์ <code>HSPI_HOST</code> ความเร็วเขียนพิกเซล 40 MHz เปิดใช้งาน Transaction Lock และ DMA ช่อง 1 พร้อมผูกขา SCLK=14, MOSI=13, MISO=12, DC=2[cite: 2]</td></tr>
+      <tr><td class="line-num">39-58</td><td class="code-col">auto cfg = panel_.config();
+cfg.pin_cs = 15; cfg.pin_rst = -1; cfg.pin_busy = -1;
+cfg.memory_width = 240; cfg.memory_height = 320;
+cfg.panel_width = 240; cfg.panel_height = 320;
+...
+panel_.config(cfg);</td><td class="desc-col"><strong>บล็อกตั้งค่าพาเนลจอ:</strong><br>กำหนดขา CS=15 ขนาดความละเอียด 240×320 พิกเซล และนำค่า <code>TFT_INVERT</code> กับ <code>TFT_RGB_ORDER</code> จาก <code>config.h</code> มาใช้งาน[cite: 2]</td></tr>
+      <tr><td class="line-num">60-67</td><td class="code-col">auto cfg = light_.config();
+cfg.pin_bl = 21; cfg.invert = TFT_INVERT;
+cfg.freq = 12000; cfg.pwm_channel = 7;
+light_.config(cfg); panel_.setLight(&amp;light_);</td><td class="desc-col"><strong>บล็อกตั้งค่าไฟหน้าจอ:</strong><br>ผูกขา GPIO 21 เข้ากับ PWM ช่อง 7 ความถี่ 12 kHz เพื่อให้สั่งหรี่แสงผ่านฟังก์ชัน <code>display.setBrightness()</code> ได้ทันที[cite: 2]</td></tr>
+      <tr><td class="line-num">69-85</td><td class="code-col">auto cfg = touch_.config();
+cfg.x_min = 240; cfg.x_max = 3800;
+cfg.y_min = 3700; cfg.y_max = 200;
+cfg.pin_int = 36; cfg.bus_shared = false;
+cfg.offset_rotation = 2; cfg.spi_host = VSPI_HOST;
+cfg.freq = 1000000;
+cfg.pin_sclk = 25; cfg.pin_mosi = 32;
+cfg.pin_miso = 39; cfg.pin_cs = 33;
+touch_.config(cfg); panel_.setTouch(&amp;touch_);</td><td class="desc-col"><strong>บล็อกตั้งค่าทัชสกรีน XPT2046:</strong><br>แยกไปใช้บัส <code>VSPI_HOST</code> ความเร็ว 1 MHz (<code>bus_shared = false</code>) กำหนดค่าสเกล ADC ดิบ (240–3800) และผูกขา CLK=25, MOSI=32, MISO=39, CS=33, INT=36[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <!-- บทที่ 2 -->
+  <h2>บทที่ 2: การควบคุม Bluetooth Classic SPP (ClassicController.h &amp; BluetoothService.h)</h2>
+
+  <h3>2.1 คำอธิบายไฟล์ ClassicController.h (ทุกบรรทัด)</h3>
+  <table>
+    <thead>
+      <tr><th>บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">1-7</td><td class="code-col">#pragma once
+#include &lt;esp_bt.h&gt;
+inline esp_err_t startClassicController(){
+ if(esp_bt_controller_get_status()!=ESP_BT_CONTROLLER_STATUS_IDLE)
+   return ESP_ERR_INVALID_STATE;</td><td class="desc-col">ดึงไลบรารีระดับล่างของ ESP-IDF (<code>esp_bt.h</code>) มาตรวจสอบว่าตัวควบคุม Bluetooth ยังอยู่ในสถานะว่าง (IDLE) ก่อนเริ่มตั้งค่า[cite: 2]</td></tr>
+      <tr><td class="line-num">8-9</td><td class="code-col"> esp_err_t err=esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
+ if(err!=ESP_OK)return err;</td><td class="desc-col"><strong>จุดสำคัญ:</strong> สั่งปลดปล่อยหน่วยความจำ RAM ของส่วน BLE คืนให้ระบบทันที (ประหยัด RAM ได้หลายหมื่นไบต์) เนื่องจากโปรเจกต์นี้ใช้เฉพาะ Bluetooth Classic SPP[cite: 2]</td></tr>
+      <tr><td class="line-num">10-14</td><td class="code-col"> esp_bt_controller_config_t cfg=BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+ cfg.mode=ESP_BT_MODE_CLASSIC_BT;
+ err=esp_bt_controller_init(&amp;cfg);
+ if(err!=ESP_OK)return err;
+ return esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT);
+}</td><td class="desc-col">โหลดโครงสร้างตั้งค่าเริ่มต้น เปลี่ยนโหมดเป็น <code>ESP_BT_MODE_CLASSIC_BT</code> แล้วสั่ง Init และ Enable คอนโทรลเลอร์ให้พร้อมทำงานก่อนเรียก <code>BT.begin()</code>[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 คำอธิบายไฟล์ BluetoothService.h (ทุกบรรทัด)</h3>
+  <table>
+    <thead>
+      <tr><th>บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">1-7</td><td class="code-col">#pragma once
+#include &lt;cstdint&gt;
+#include &lt;esp_gap_bt_api.h&gt;
+struct BtEvent{int event,status,channel;uint32_t value;};
+enum {BT_AUTH=100,BT_CONFIRM=101};
+static constexpr EventBits_t BT_READY_BIT=1,BT_FAILED_BIT=2;
+volatile bool btServerReady=false;</td><td class="desc-col">ประกาศโครงสร้าง <code>BtEvent</code> สำหรับส่งข้อมูลเหตุการณ์ผ่าน Queue ของ FreeRTOS และประกาศตัวแปร <code>btServerReady</code> แบบ <code>volatile</code> เพื่อให้ข้ามคอร์อ่านค่าได้อย่างปลอดภัย[cite: 2]</td></tr>
+      <tr><td class="line-num">8-19</td><td class="code-col">static void enqueueBt(int event,int status=0,int channel=0,uint32_t value=0){...}
+static void sppEvent(esp_spp_cb_event_t event,esp_spp_cb_param_t *p){
+ switch(event){
+  case ESP_SPP_INIT_EVT: ...
+  case ESP_SPP_START_EVT:
+   btServerReady=p->start.status==ESP_SPP_SUCCESS;
+   enqueueBt(event,p->start.status,p->start.scn);
+   xEventGroupSetBits(btStartEvent,btServerReady?BT_READY_BIT:BT_FAILED_BIT);
+   break;
+  case ESP_SPP_SRV_OPEN_EVT: ...
+  case ESP_SPP_CLOSE_EVT: ...
+  case ESP_SPP_SRV_STOP_EVT: ...
+ }
+}</td><td class="desc-col">ฟังก์ชัน Callback รับเหตุการณ์ SPP จากสแต็ก Bluetooth: เมื่อเซิร์ฟเวอร์เริ่มทำงานสำเร็จ (<code>ESP_SPP_START_EVT</code>) จะเซ็ตบิต <code>BT_READY_BIT</code> เพื่อปลดล็อกฟังก์ชันบูตเครื่อง และส่งข้อมูลเข้าคิวไปแสดงผล[cite: 2]</td></tr>
+      <tr><td class="line-num">20-29</td><td class="code-col">static void authComplete(bool ok){enqueueBt(BT_AUTH,ok?0:1);}
+static void serviceBtEvents(){
+ BtEvent e;
+ while(xQueueReceive(btEventQueue,&amp;e,0)==pdTRUE){
+  ...
+  Serial.printf("[BT-EVENT] %s status=%d ...\n",...);
+  Guard g; linkInfo.serverReady=btServerReady;
+  std::snprintf(linkInfo.btPhase,sizeof(linkInfo.btPhase),...);
+ }
+}</td><td class="desc-col">ดึงเหตุการณ์จากคิวมาพิมพ์ลง Serial Monitor และใช้ <code>Guard g;</code> ล็อก Mutex เพื่ออัปเดตข้อความสถานะ <code>linkInfo.btPhase</code> (เช่น <code>SPP SERVER READY</code>, <code>SPP PHONE OPEN</code>)[cite: 2]</td></tr>
+      <tr><td class="line-num">30-37</td><td class="code-col">static void clearPairing(){
+ BT.disconnect();
+ int n=esp_bt_gap_get_bond_device_num();
+ esp_bd_addr_t list[16]; n=std::min(n,16);
+ if(n>0&amp;&amp;esp_bt_gap_get_bond_device_list(&amp;n,list)==ESP_OK)
+  for(int i=0;i&lt;n;i++) BT.unpairDevice(list[i]);
+ esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE,ESP_BT_GENERAL_DISCOVERABLE);
+ ...
+}</td><td class="desc-col">ลบข้อมูลการจับคู่โทรศัพท์ที่เคยบันทึกไว้ในบอร์ดทั้งหมด (สูงสุด 16 เครื่อง) แล้วเปิดโหมดให้โทรศัพท์ค้นหาและจับคู่ใหม่ได้[cite: 2]</td></tr>
+      <tr><td class="line-num">38-49</td><td class="code-col">static bool prepareBluetooth(){
+ BT.register_callback(sppEvent); BT.onAuthComplete(authComplete);
+ BT.setPin(BT_PIN);
+ esp_err_t err=startClassicController(); ...
+ if(!BT.begin(BT_DEVICE_NAME,false)) return false;
+ ...
+ EventBits_t bits=xEventGroupWaitBits(btStartEvent,BT_READY_BIT|BT_FAILED_BIT,pdFALSE,pdFALSE,pdMS_TO_TICKS(10000));
+ serviceBtEvents();
+ if(!(bits&amp;BT_READY_BIT)) return false;
+ esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE,ESP_BT_GENERAL_DISCOVERABLE);
+ return true;
+}</td><td class="desc-col">ฟังก์ชันเริ่มต้นระบบ Bluetooth ตอนบูตเครื่อง: ตั้งรหัส PIN 1234 เปิดโหมด Slave (<code>false</code>) และรอจนกว่า SPP Server จะพร้อมทำงานภายใน 10 วินาที ก่อนอนุญาตให้ระบบ Wi-Fi เริ่มทำงานตามหลัง[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <!-- บทที่ 3 -->
+  <h2>บทที่ 3: ระบบจำลองเครื่องยนต์, รหัส DTC และ ELM327 (DtcCatalog.h &amp; ElmSimulator.h)</h2>
+
+  <h3>3.1 คำอธิบายไฟล์ DtcCatalog.h (ตารางรหัสปัญหา 10 กรณีฝึกสอน)</h3>
+  <table>
+    <thead>
+      <tr><th>รหัส DTC</th><th>เลข Hex 16-bit</th><th>ความหมายภาษาไทย / อังกฤษในโค้ด</th><th>ค่าจำลองประกอบการสอน (ในฟังก์ชัน scenario)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>P0100</strong>[cite: 2]</td><td><code>0x0100</code>[cite: 2]</td><td>วงจรเซนเซอร์มวลอากาศผิดปกติ (MAF circuit fault)[cite: 2]</td><td>RPM = 1000, Load = 0%[cite: 2]</td></tr>
+      <tr><td><strong>P0118</strong>[cite: 2]</td><td><code>0x0118</code>[cite: 2]</td><td>วงจรเซนเซอร์อุณหภูมิน้ำหล่อเย็นมีสัญญาณสูง (ECT high input)[cite: 2]</td><td>Coolant = 150 °C[cite: 2]</td></tr>
+      <tr><td><strong>P0120</strong>[cite: 2]</td><td><code>0x0120</code>[cite: 2]</td><td>วงจรเซนเซอร์ตำแหน่งคันเร่ง A ผิดปกติ (Throttle A circuit)[cite: 2]</td><td>Throttle = 0%[cite: 2]</td></tr>
+      <tr><td><strong>P0135</strong>[cite: 2]</td><td><code>0x0135</code>[cite: 2]</td><td>วงจรฮีตเตอร์ออกซิเจน Bank 1 Sensor 1 ผิดปกติ (O2 heater B1S1)[cite: 2]</td><td>Coolant = 40 °C, RPM = 1200, Speed = 0[cite: 2]</td></tr>
+      <tr><td><strong>P0171</strong>[cite: 2]</td><td><code>0x0171</code>[cite: 2]</td><td>ส่วนผสมบางเกินไป Bank 1 (Fuel system too lean, B1)[cite: 2]</td><td>AFR = 18.0 (Lambda = 1.22), Load = 30%[cite: 2]</td></tr>
+      <tr><td><strong>P0172</strong>[cite: 2]</td><td><code>0x0172</code>[cite: 2]</td><td>ส่วนผสมหนาเกินไป Bank 1 (Fuel system too rich, B1)[cite: 2]</td><td>AFR = 11.5 (Lambda = 0.78), Load = 45%[cite: 2]</td></tr>
+      <tr><td><strong>P0300</strong>[cite: 2]</td><td><code>0x0300</code>[cite: 2]</td><td>ตรวจพบการจุดระเบิดผิดพลาดหลายสูบหรือสุ่ม (Multiple misfire)[cite: 2]</td><td>RPM = 650, Speed = 0, Load = 40%[cite: 2]</td></tr>
+      <tr><td><strong>P0301</strong>[cite: 2]</td><td><code>0x0301</code>[cite: 2]</td><td>ตรวจพบการจุดระเบิดผิดพลาดสูบ 1 (Cylinder 1 misfire)[cite: 2]</td><td>RPM = 750, Speed = 0, Load = 35%[cite: 2]</td></tr>
+      <tr><td><strong>P0420</strong>[cite: 2]</td><td><code>0x0420</code>[cite: 2]</td><td>ประสิทธิภาพตัวเร่งปฏิกิริยาต่ำ Bank 1 (Catalyst efficiency B1)[cite: 2]</td><td>RPM = 2500, Speed = 70 km/h, Coolant = 90 °C[cite: 2]</td></tr>
+      <tr><td><strong>P0500</strong>[cite: 2]</td><td><code>0x0500</code>[cite: 2]</td><td>วงจรเซนเซอร์ความเร็วรถ A ผิดปกติ (Vehicle speed sensor A)[cite: 2]</td><td>Speed = 0 km/h, RPM = 2500, Throttle = 40%[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 คำอธิบายไฟล์ ElmSimulator.h (ทุกส่วนและทุกฟังก์ชัน)</h3>
+  <table>
+    <thead>
+      <tr><th>บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">11-28</td><td class="code-col">struct Vehicle {
+  bool bike=false, automatic=false;
+  int rpm=850,speed=0,coolant=85,throttle=0,load=20,intake=30,fuel=70;
+  float volts=13.8f, afr=14.7f;
+  int maxRpm() const {return bike?16000:8000;}
+  float lambda() const {return std::max(0.50f, std::min(1.99f, afr / 14.7f));}
+  void preset(bool motorcycle) {...}
+  void stop(){...}
+  void tick(uint32_t ms){...}
+};</td><td class="desc-col"><strong>โครงสร้าง <code>Vehicle</code>:</strong><br>
+• เก็บค่าพารามิเตอร์สดของเครื่องยนต์ทั้งหมด[cite: 2]<br>
+• <code>preset()</code>: รีเซ็ตค่ากลับสู่รอบเดินเบา (รถยนต์ 850 RPM / มอเตอร์ไซค์ 1,400 RPM, AFR 14.7)[cite: 2]<br>
+• <code>stop()</code>: จำลองสถานะดับเครื่องยนต์ แต่เปิดสวิตช์กุญแจ ON (RPM=0, Speed=0, Volts=12.4V)[cite: 2]<br>
+• <code>tick()</code>: คำนวณการกวาดค่าขึ้น-ลงอัตโนมัติในโหมด AUTO ด้วยสมการคลื่นโคไซน์คาบละ 16 วินาที[cite: 2]</td></tr>
+      <tr><td class="line-num">30-46</td><td class="code-col">struct FaultBank {
+  static constexpr size_t CAPACITY=16;
+  std::vector&lt;uint16_t&gt; stored,pending,repeatStored,repeatPending;
+  bool repeat=false,cleared=false,hasFreeze=false;
+  uint32_t repeatAt=0,clearCount=0,revision=0;
+  uint16_t freezeCode=0;
+  Vehicle freeze;
+  static bool encode(const std::string &amp;s,uint16_t &amp;out){...}
+  static std::string decode(uint16_t code){...}</td><td class="desc-col"><strong>โครงสร้าง <code>FaultBank</code>:</strong><br>
+• เก็บรายการรหัส <code>stored</code> (Mode 03) และ <code>pending</code> (Mode 07) สูงสุดรายการละ 16 รหัส[cite: 2]<br>
+• <code>encode()</code> / <code>decode()</code>: แปลงรหัสข้อความ 5 ตัวอักษร (เช่น P0171) ไป-กลับกับตัวเลข 16 บิต[cite: 2]</td></tr>
+      <tr><td class="line-num">47-70</td><td class="code-col">  bool add(uint16_t code,bool isPending,const Vehicle &amp;v){
+    ...
+    if(!isPending&amp;&amp;!hasFreeze){freeze=v;freezeCode=code;hasFreeze=true;}
+    list.push_back(code);revision++;return true;
+  }
+  bool remove(uint16_t code,bool isPending){...}
+  void clear(uint32_t now){
+    if(repeat&amp;&amp;(!stored.empty()||!pending.empty())){
+      repeatStored=stored;repeatPending=pending;repeatAt=now+5000;
+    } ...
+    stored.clear();pending.clear();hasFreeze=false;cleared=true;clearCount++;revision++;
+  }</td><td class="desc-col">• <code>add()</code>: เพิ่มรหัสเข้าคลัง หากเป็นรหัส Stored ตัวแรก จะบันทึกค่า <code>Vehicle</code> ขณะนั้นลงใน <code>freeze</code> ทันทีเพื่อใช้ตอบใน Mode 02[cite: 2]<br>
+• <code>clear()</code>: ล้างรหัสเมื่อได้รับคำสั่ง Mode 04 หรือกดปุ่ม Clear หากเปิดโหมดเกิดซ้ำ (<code>repeat</code>) จะตั้งเวลา <code>now + 5000</code> (5 วินาที) เพื่อนำรหัสเดิมกลับมาแสดงใหม่[cite: 2]</td></tr>
+      <tr><td class="line-num">71-104</td><td class="code-col">  void tick(uint32_t now,const Vehicle &amp;v){...}
+  void demo(const Vehicle &amp;v){...}
+  void demo10(const Vehicle &amp;v){...}
+  bool scenario(uint16_t code,bool isPending,Vehicle &amp;v){...}
+  bool confirm(uint16_t code,const Vehicle &amp;v){...}
+  bool mil()const{return !stored.empty();}
+};</td><td class="desc-col">• <code>demo()</code>: ใส่รหัสตัวอย่าง 3 ตัว (P0300, P0118, P0135)[cite: 2]<br>
+• <code>demo10()</code>: ใส่รหัสทั้ง 10 ตัวจาก <code>DTC_CATALOG</code> เพื่อฝึกอ่านข้อมูลแบบ Multi-Frame[cite: 2]<br>
+• <code>confirm()</code>: ย้ายรหัสจาก Pending ไปเป็น Stored พร้อมเปิดไฟ MIL[cite: 2]<br>
+• <code>mil()</code>: คืนค่า <code>true</code> (ไฟรูปเครื่องโชว์) เมื่อมีรหัสอยู่ในรายการ <code>stored</code> อย่างน้อย 1 ตัว[cite: 2]</td></tr>
+      <tr><td class="line-num">145-190</td><td class="code-col">static uint16_t lambdaWord(const Vehicle &amp;v){
+  int raw=(int)std::lround((v.afr / 14.7f) * 32768.0f);
+  return (uint16_t)std::max(0, std::min(65535, raw));
+}
+static Bytes pid(unsigned p,const Vehicle &amp;v,const FaultBank &amp;d){
+  ...
+  case 0x04: b.push_back((v.load*255+50)/100); break;
+  case 0x05: b.push_back(v.coolant+40); break;
+  case 0x0C: {int r=v.rpm*4; b.push_back((r>>8)&amp;255); b.push_back(r&amp;255); break;}
+  case 0x0D: b.push_back(v.speed); break;
+  case 0x0F: b.push_back(v.intake+40); break;
+  case 0x11: b.push_back((v.throttle*255+50)/100); break;
+  case 0x24: ... // Wideband O2 Lambda + Voltage
+  case 0x2F: b.push_back((v.fuel*255+50)/100); break;
+  case 0x34: ... // Wideband O2 Lambda + Current (mA)
+  case 0x42: {int mv=(int)std::lround(v.volts*1000); ...}
+  case 0x44: {uint16_t lw=lambdaWord(v); ...}
+}</td><td class="desc-col"><strong>ฟังก์ชันเข้ารหัสค่าเซนเซอร์ตามมาตรฐาน SAE J1979:</strong><br>
+• <code>0x05</code> &amp; <code>0x0F</code> (อุณหภูมิ): บวก Offset +40 เพื่อให้ส่งค่าติดลบ (-40°C) ในไบต์แบบไม่มีเครื่องหมายได้[cite: 2]<br>
+• <code>0x0C</code> (RPM): คูณ 4 แล้วแยกเป็น 2 ไบต์ (ความละเอียด 0.25 RPM ต่อบิต)[cite: 2]<br>
+• <code>0x24, 0x34, 0x44</code> (AFR/Lambda): แปลงค่า Lambda ($\text{AFR}/14.7$) คูณด้วย 32,768 เพื่อส่งเป็นเลข 16 บิตตามมาตรฐาน Wideband O2[cite: 2]</td></tr>
+      <tr><td class="line-num">191-216</td><td class="code-col">std::string at(const std::string &amp;c,const Vehicle &amp;v){
+  if(c=="ATZ"||c=="ATWS"){reset();return "ELM327 v1.5";}
+  if(c=="ATE0"||c=="ATE1"){echo=c.back()=='1';return "OK";}
+  if(c=="ATH0"||c=="ATH1"){headers=c.back()=='1';return "OK";}
+  if(c=="ATCAF0"||c=="ATCAF1"){caf=c.back()=='1';return "OK";}
+  if(c=="ATDP")return "ISO 15765-4 (CAN 11/500)";
+  if(c=="ATRV"){char b[16];std::snprintf(b,sizeof(b),"%.1fV",v.volts);return b;}
+  ...
+}</td><td class="desc-col"><strong>ตัวแปลคำสั่ง AT Command ของชิป ELM327:</strong><br>
+รองรับคำสั่งเริ่มต้นจากแอปสแกนเนอร์ เช่น <code>ATZ</code> (รีเซ็ต), <code>ATE0</code> (ปิดการสะท้อนคำสั่ง), <code>ATH1</code> (เปิดการแสดง CAN ID 7E8), <code>ATCAF1</code> (จัดเฟรมอัตโนมัติ) และ <code>ATRV</code> (อ่านแรงดันแบตเตอรี่)[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <!-- บทที่ 4 -->
+  <h2>บทที่ 4: ระบบแสดงผลภาษาไทย, ธีมสี และการควบคุมทัชสกรีน (UiSettings.h, ThaiLabels.h, SimControls.h, SimUI.h)</h2>
+  <table>
+    <thead>
+      <tr><th>ไฟล์ / บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">UiSettings.h<br>1-28</td><td class="code-col">struct UiSettings {
+  bool thai=true,beep=true;
+  uint8_t theme=1,brightness=230;
+  uint32_t background=0x07111D,card=0x102437,accent=0x28D0FF,foreground=0xECF6FF;
+  uint32_t revision=1;
+  void changed(){++revision;}
+};
+inline uint16_t rgb565(uint32_t v){
+  return ((v>>8)&amp;0xF800)|((v>>5)&amp;0x07E0)|((v>>3)&amp;0x001F);
+}</td><td class="desc-col">เก็บการตั้งค่าหน้าจอและเสียง พร้อมฟังก์ชัน <code>rgb565()</code> สำหรับบีบอัดสี 24-bit (R8:G8:B8) จากหน้าเว็บ ให้เป็นสี 16-bit (R5:G6:B5) สำหรับจอ TFT และใช้ตัวแปร <code>revision</code> คอยนับครั้งที่มีการแก้ไขค่าเพื่อซิงค์ระหว่างหน้าจอกับหน้าเว็บ[cite: 2]</td></tr>
+      <tr><td class="line-num">ThaiLabels.h<br>1-116</td><td class="code-col">struct ThaiCaption{const char *label;uint16_t w,h;const uint8_t *bits;};
+static const uint8_t th_bits_0[] PROGMEM={...};
+...
+template&lt;class C&gt;bool drawThaiLabel(C &amp;canvas,const char *s,int x,int y,uint16_t color){
+ const auto *c=thaiCaption(s);if(!c)return false;
+ int stride=(c->w+7)/8;
+ for(int row=0;row&lt;c->h;row++){
+  int start=-1;
+  for(int col=0;col&lt;=c->w;col++){
+   bool on=col&lt;c->w&amp;&amp;(pgm_read_byte(c->bits+row*stride+col/8)&amp;(0x80>>(col%8)));
+   if(on&amp;&amp;start&lt;0)start=col;
+   if(!on&amp;&amp;start>=0){canvas.drawFastHLine(x+start,y+row,col-start,color);start=-1;}
+  }
+ }return true;
+}</td><td class="desc-col">เก็บข้อมูลบิตแมปภาษาไทยจากฟอนต์ Sarabun ที่ผ่านการจัดเรียงสระ/วรรณยุกต์ด้วยสคริปต์ Python (<code>build_thai_labels.py</code>) ไว้ในหน่วยความจำ Flash (<code>PROGMEM</code>) เมื่อฟังก์ชัน <code>text()</code> ถูกเรียก จะค้นหาคำในตารางแล้ววาดด้วยเส้นแนวนอน <code>drawFastHLine</code> ทำให้แสดงภาษาไทยได้ถูกต้องโดยสระไม่ลอย[cite: 2]</td></tr>
+      <tr><td class="line-num">SimControls.h<br>33-94</td><td class="code-col">struct Controls {
+ int page=0,dragField=-1,action=0,dtcPage=0;
+ bool pendingList=false,contact=false; int releaseCount=0;
+ bool touch(bool down,int x,int y,Vehicle &amp;v,FaultBank &amp;d,uint32_t now,UiSettings &amp;ui){
+   if(!down){if(++releaseCount>=2){contact=false;dragField=-1;}return false;}
+   ...
+   if(y>=214){page=std::max(0,std::min(5,x/53));return true;}
+   ...
+ }
+};</td><td class="desc-col">จัดการพิกัดการแตะหน้าจอ:<br>
+• ต้องปล่อยนิ้วติดต่อกันอย่างน้อย 2 รอบ (<code>releaseCount >= 2</code>) จึงถือว่ายกนิ้วจริง เพื่อป้องกันสัญญาณรบกวนของจอ Resistive[cite: 2]<br>
+• แถบล่างสุด (<code>y >= 214</code>) แบ่งตามแนวนอนช่องละ 53 พิกเซล สำหรับสลับหน้าจอทั้ง 6 หน้า (0=ขับขี่, 1=เครื่อง, 2=ไฟ/AFR, 3=DTC, 4=ข้อมูล, 5=ตั้งค่า)[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <!-- บทที่ 5 -->
+  <h2>บทที่ 5: ระบบเครือข่าย Wi-Fi และไฟล์หลัก (NetworkService.h &amp; CYD_ELM327_WEB_DTC_V3_2_0.ino)</h2>
+  <table>
+    <thead>
+      <tr><th>ไฟล์ / บรรทัด</th><th>โค้ดโปรแกรม (Source Code)</th><th>คำอธิบายละเอียดสำหรับผู้สอน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="line-num">NetworkService.h<br>1-106</td><td class="code-col">inline void startJoin(const char *s,const char *pw){...}
+inline void startScan(){...}
+inline void setupAP(){...}
+inline void networkTick(){...}
+inline void webTask(void *){
+ loadNetwork(); uint32_t resumeAt=millis()+3000; bool resumePending=true;
+ for(;;){
+  NetCommand c;
+  if(xQueueReceive(wifiQueue,&amp;c,0)==pdTRUE){...}
+  if(resumePending&amp;&amp;(int32_t)(millis()-resumeAt)>=0){
+   resumePending=false;
+   if(savedSsid[0]&amp;&amp;btServerReady) startJoin(savedSsid,savedPass);
+  }
+  networkTick();
+  bool on;{Guard g;on=netState.on;}
+  if(on) server.handleClient();
+  vTaskDelay(pdMS_TO_TICKS(2));
+ }
+}</td><td class="desc-col"><strong>การจัดการ Wi-Fi แบบไม่บล็อกการทำงานของระบบ:</strong><br>
+• หน่วงเวลาเปิด Wi-Fi อัตโนมัติไว้ 3 วินาทีหลังบูต และรอให้ <code>btServerReady</code> เป็นจริงก่อน เพื่อไม่ให้คลื่นวิทยุ 2.4 GHz แย่งทรัพยากรกันตอนเริ่มต้น SPP[cite: 2]<br>
+• ใช้การสแกนหาเครือข่ายแบบ Async (<code>WiFi.scanNetworks(true,...)</code>) และเรียงลำดับความแรงสัญญาณ RSSI จากมากไปน้อยสูงสุด 12 รายการ[cite: 2]<br>
+• บันทึกรหัสผ่าน Wi-Fi ลง NVS เฉพาะเมื่อเชื่อมต่อกับเราเตอร์สำเร็จแล้วเท่านั้น[cite: 2]</td></tr>
+      <tr><td class="line-num">.ino<br>39-61</td><td class="code-col">struct Guard{
+ Guard(){xSemaphoreTake(sharedMutex,portMAX_DELAY);}
+ ~Guard(){xSemaphoreGive(sharedMutex);}
+};
+void requestBeep(bool force=false){...}
+void beepService(){...}
+void loadUi(){...}
+void persistUi(){...}</td><td class="desc-col">• <code>struct Guard</code>: ใช้เทคนิค RAII ของ C++ จอง Mutex ทันทีที่ประกาศตัวแปร และปลดล็อกให้อัตโนมัติเมื่อจบปีกกา ป้องกันการลืมปลดล็อก Mutex[cite: 2]<br>
+• <code>loadUi()</code> / <code>persistUi()</code>: อ่านและบันทึกการตั้งค่า UI ลงใน NVS Namespace <code>"cyd-sim-ui"</code> โดยหน่วงเวลา 1.5 วินาทีหลังหยุดปรับค่า[cite: 2]</td></tr>
+      <tr><td class="line-num">.ino<br>64-137</td><td class="code-col">void stateResponse(){...}
+void setValue(){...}
+void dtcAction(){...}
+void uiAction(){...}</td><td class="desc-col"><strong>ฟังก์ชันจัดการ REST API สำหรับหน้าเว็บ Dashboard:</strong><br>
+• <code>GET /api/state</code>: ส่งสถานะทั้งหมดกลับเป็น JSON ขนาดประมาณ 2.8 KB[cite: 2]<br>
+• <code>POST /api/set</code>: รับค่าจากการเลื่อนสไลเดอร์บนเว็บ พร้อมตรวจสอบขอบเขตตัวเลข (Validation) ก่อนอัปเดตค่าใน <code>vehicle</code>[cite: 2]<br>
+• <code>POST /api/dtc</code>: จัดการคำสั่งเพิ่ม/ลบ/ยืนยันรหัส DTC และสถานการณ์จำลอง 10 กรณี[cite: 2]<br>
+• <code>POST /api/ui</code>: เปลี่ยนภาษา ธีม สี ความสว่าง และเปิด/ปิดเสียง[cite: 2]</td></tr>
+      <tr><td class="line-num">.ino<br>140-172</td><td class="code-col">void btTask(void *){
+ std::string rx; rx.reserve(100);
+ for(;;){
+  serviceBtEvents();
+  ...
+  for(unsigned budget=0;budget&lt;512&amp;&amp;BT.available();budget++){
+   char ch=(char)BT.read(); rxAt=millis();
+   if(ch=='\r'){
+    uint32_t t0=micros();
+    ...
+    reply=elm.reply(rx,vehicle,faults,millis());
+    size_t sent=BT.write((const uint8_t *)reply.data(),reply.size());
+    uint32_t elapsed=micros()-t0;
+    ...
+   }
+  }
+  vTaskDelay(1);
+ }
+}</td><td class="desc-col"><strong>ลูปการทำงานของ Bluetooth บน Core 0:</strong><br>
+อ่านอักขระจากพอร์ต Bluetooth ครั้งละไม่เกิน 512 ไบต์ต่อรอบ เมื่อเจอ <code>\r</code> (Carriage Return) จะส่งข้อความเข้า <code>elm.reply()</code> แล้วส่งผลลัพธ์กลับทันที พร้อมวัดเวลาการทำงานระดับไมโครวินาทีเก็บไว้ใน <code>linkInfo.replyUs</code>[cite: 2]</td></tr>
+      <tr><td class="line-num">.ino<br>181-208</td><td class="code-col">void setup(){
+ Serial.begin(115200); delay(150);
+ sharedMutex=xSemaphoreCreateMutex();
+ ...
+ display.init(); display.setRotation(SCREEN_ROTATION);
+ card.setColorDepth(8); card.createSprite(304,46);
+ bool ready=prepareBluetooth();
+ ...
+ server.on("/",HTTP_GET,...);
+ ...
+ xTaskCreatePinnedToCore(btTask,"elm-bt",8192,nullptr,2,&amp;btHandle,0);
+ xTaskCreatePinnedToCore(webTask,"elm-web",6144,nullptr,1,&amp;webHandle,1);
+}</td><td class="desc-col"><strong>ฟังก์ชันเริ่มต้นระบบ <code>setup()</code>:</strong><br>
+1. สร้าง Mutex และ Queue ทั้งหมด หากจอง RAM ไม่สำเร็จจะหยุดทำงานพร้อมแจ้งเตือน[cite: 2]<br>
+2. เริ่มต้นหน้าจอ TFT และสร้าง Sprite ขนาด 304×46 พิกเซล (8-bit RGB332) สำหรับวาดการ์ดแต่ละแถวแบบไร้การกระพริบ[cite: 2]<br>
+3. เปิด Bluetooth SPP และผูก URL ของ Web Server[cite: 2]<br>
+4. แยกสร้าง Task สำหรับ Bluetooth บน Core 0 และ Web Server บน Core 1[cite: 2]</td></tr>
+      <tr><td class="line-num">.ino<br>224-273</td><td class="code-col">void loop(){
+ uint32_t now=millis();
+ {Guard g; vehicle.tick(now); faults.tick(now,vehicle); ...}
+ serialService(); beepService(); persistUi();
+ ...
+ if(now-touchAt>=15){ ... }
+ if(wifiControls.active){ ... }
+ else if(now-drawAt>=60){ ... }
+ if(now-debugAt>=5000){ ... }
+ delay(2);
+}</td><td class="desc-col"><strong>ลูปหลัก <code>loop()</code> บน Core 1:</strong><br>
+• อัปเดตการจำลองค่า AUTO (<code>vehicle.tick</code>) และตัวจับเวลาเกิดรหัสซ้ำ 5 วินาที (<code>faults.tick</code>)[cite: 2]<br>
+• อ่านค่าทัชสกรีนทุกๆ 15 ms[cite: 2]<br>
+• วาดหน้าจอเฉพาะส่วนที่มีการเปลี่ยนแปลงค่าทุกๆ 60 ms (~16.6 FPS)[cite: 2]<br>
+• พิมพ์สถานะการใช้หน่วยความจำ (Free Heap / Stack High Water Mark) ออกทาง Serial ทุกๆ 5 วินาที[cite: 2]</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <strong>สรุปขั้นตอนการนำไปใช้สอนภาคปฏิบัติ (Lab Checklist):</strong>
+    <ol>
+      <li><strong>การตั้งค่า Arduino IDE:</strong> ใช้บอร์ดแพ็กเกจ <code>esp32 by Espressif Systems เวอร์ชัน 2.0.17</code> และไลบรารี <code>LovyanGFX เวอร์ชัน 1.1.16</code> เลือก Partition Scheme เป็น <strong>Huge APP (3MB No OTA/1MB SPIFFS)</strong>[cite: 2]</li>
+      <li><strong>การเชื่อมต่อแอป Car Scanner:</strong> จับคู่ Bluetooth ชื่อ <code>VUTH_CYD_OBD_SIM</code> รหัส <code>1234</code> เลือกโปรไฟล์ <strong>Generic OBD-II (CAN 11bit 500kbps)</strong>[cite: 2]</li>
+      <li><strong>การฝึกวิเคราะห์ DTC:</strong> ให้ผู้เรียนเปรียบเทียบความแตกต่างระหว่างรหัส <strong>Pending (Mode 07)</strong> ที่ไฟรูปเครื่องยังไม่ติด กับรหัส <strong>Stored (Mode 03)</strong> ที่ทำให้ไฟ MIL ติดพร้อมบันทึกข้อมูล <strong>Freeze Frame (Mode 02)</strong>[cite: 2]</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+function exportToWord() {
+  const content = document.getElementById('document-content').innerHTML;
+  const styles = document.querySelector('style').innerHTML;
+  const preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>CYD ELM327 V3.2.0 Manual</title><style>" + styles + "</style></head><body>";
+  const postHtml = "</body></html>";
+  const html = preHtml + content + postHtml;
+
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
